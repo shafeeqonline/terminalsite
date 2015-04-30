@@ -301,6 +301,7 @@ COMMANDS.help = function(argv, cb) {
          this.returnHandler = this._execute;
          this.cwd = this.fs;
          this._prompt();
+         this._toggleBlinker(600);
          this._dequeue();
       },
 
@@ -389,6 +390,7 @@ COMMANDS.help = function(argv, cb) {
 
       //As new commands are entered and data is appended to the DOM, offset also increases
       scroll: function() {
+         window.scrollBy(0, document.body.scrollHeight);
       },
 
       //Check arguments that are entered with the command if it has file structure operations or other commands which staat with -
@@ -490,6 +492,30 @@ COMMANDS.help = function(argv, cb) {
          });
       },
 
+      //Adds the blinker and removes and adds it to stdout whenever new elements have been added
+      _toggleBlinker: function(timeout) {
+         var blinker = this.div.querySelector('#blinker'),
+             stdout;
+
+         if (blinker) {
+            blinker.parentNode.removeChild(blinker);
+         } else {
+            stdout = this.stdout();
+            if (stdout) {
+               blinker = document.createElement('span');
+               blinker.id = 'blinker';
+               blinker.innerHTML = '&#x2588';
+               stdout.parentNode.appendChild(blinker);
+            }
+         }
+
+         if (timeout) {
+            setTimeout(function() {
+               this._toggleBlinker(timeout);
+            }.bind(this), timeout);
+         }
+      },
+
       //When stdout is removed from DOM and added again it removes the existing stdout id
       _resetID: function(query) {
          var element = this.div.querySelector(query);
@@ -516,6 +542,7 @@ COMMANDS.help = function(argv, cb) {
          command.classList.add('command');
          command.id = 'stdout';
          div.appendChild(command);
+         this._toggleBlinker(0);
          this.scroll();
       },
 
