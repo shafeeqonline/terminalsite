@@ -1,0 +1,40 @@
+{
+   "name": "~",
+   "type": "dir",
+   "contents": [
+      {
+         "name": "README",
+         "type": "text",
+         "contents": "My name is Shafeeq Ur Rahman. I am a Interactive Developer and a Front End Engineer at <a class=\"exec\" target=\"_blank\" href=\"http://www.sapientnitro.com/\">SapientNitro</a>. This is my website.<br/>You can find the source code to make your very own on <a class=\"exec\" target=\"_blank\" href=\"http://github.com/shafeeqonline/terminalsite\">GitHub</a>.<br/><br/>If you need help, type \"help\".<br/><br/>You can contact me at <a class=\"exec\" href='mailto:shafeeq.rahman01@gmail.com'>shafeeq.rahman01@gmail.com</a> or follow me on Twitter <a class=\"exec\" target=\"_blank\" href=\"https://twitter.com/shafeeqonline\">@shafeeqonline</a>.<br/>Facebook : <a class=\"exec\" target=\"_blank\" href=\"https://www.facebook.com/iamshafeeq\">Shafeeq Rahman</a><br/>linkedin : <a class=\"exec\" target=\"_blank\" href=\"https://www.linkedin.com/profile/view?id=227027076\">Shafeeq Rahman</a><br/><br/>"
+      },
+      {
+         "name": "resume",
+         "type": "exec",
+         "contents": "downloads/resume.pdf"
+      },
+      {
+         "name": "projects",
+         "type": "dir",
+         "contents": [
+            {
+               "name": "GitHub",
+               "type": "exec",
+               "contents": "http://github.com/shafeeqonline",
+               "description": "I have various projects hosted on my GitHub account (including this website)."
+            }
+         ]
+      },
+      {
+         "name": "images",
+         "type": "dir",
+         "contents": [
+            {
+               "name": "shafeeq.jpg",
+               "type": "img",
+               "contents": "images/shafeeq.jpg",
+               "caption": "(This is me.)"
+            }
+         ]
+      }
+   ]
+}
