@@ -35,6 +35,12 @@ COMMANDS.cat =  function(argv, cb) {
    }
    filenames.forEach(function(filename, i) {
       var entry = this._terminal.getEntry(filename);
+
+      if (!entry)
+         this._terminal.write('cat: ' + filename + ': No such file or directory');
+      else if (entry.type === 'dir')
+         this._terminal.write('cat: ' + filename + ': Is a directory.');
+      else
          this._terminal.write(entry.contents);
       if (i !== filenames.length - 1)
          this._terminal.write('<br>');
@@ -49,6 +55,11 @@ COMMANDS.cd = function(argv, cb) {
    if (!filename)
       filename = '~';
    entry = this._terminal.getEntry(filename);
+   if (!entry)
+      this._terminal.write('bash: cd: ' + filename + ': No such file or directory');
+   else if (entry.type !== 'dir')
+      this._terminal.write('bash: cd: ' + filename + ': Not a directory.');
+   else
       this._terminal.cwd = entry;
    cb();
 }
@@ -74,7 +85,9 @@ COMMANDS.ls = function(argv, cb) {
       }
    }.bind(this._terminal);
 
-    if (entry.type === 'dir') {
+   if (!entry)
+      this._terminal.write('ls: cannot access ' + filename + ': No such file or directory');
+   else if (entry.type === 'dir') {
       var dirStr = this._terminal.dirString(entry);
       maxLen = entry.contents.reduce(function(prev, cur) {
          return Math.max(prev, cur.name.length);
