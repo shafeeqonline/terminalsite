@@ -204,7 +204,8 @@ COMMANDS.help = function(argv, cb) {
        '<span class="dir">directory</span>, or use "ls" to list the contents ' +
        'of that directory. The contents of a <span class="text">file</span> ' +
        'can be viewed using "cat". <span class="img">Images</span> are ' +
-       'displayed using "gimp".<br>');
+       'displayed using "gimp".<br><br>If there is a command you want to get ' +
+       'out of, press Ctrl+C or Ctrl+D.<br><br>');
    this._terminal.write('Commands are:<br>');
    for (var c in this._terminal.commands) {
       if (this._terminal.commands.hasOwnProperty(c) && !c.startswith('_'))
@@ -289,7 +290,8 @@ COMMANDS.help = function(argv, cb) {
          window.onkeydown = function(e) {
             var key = (e.which) ? e.which : e.keyCode;
 
-            if (key == 13)
+            if (key == 8 || key == 9 || key == 13 || key == 46 || key == 38 ||
+                key == 40 || e.ctrlKey)
                e.preventDefault();
             this._handleSpecialKey(key, e);
          }.bind(this);
@@ -381,6 +383,61 @@ COMMANDS.help = function(argv, cb) {
          })(0);
       },
 
+
+      // Completes the command on hitting the tab key
+      tabComplete: function(text) {
+         var parts = text.replace(/^\s+/, '').split(' '),
+             matches = [];
+         if (!parts.length)
+            return [];
+
+         if (parts.length == 1) {
+            // TODO: Combine with below.
+            var pathParts = parts[0].replace(/[\/]+/, '/').split('/'),
+                last = pathParts.pop(),
+                dir = (pathParts.length > 0) ? this.getEntry(pathParts.join('/')) : this.cwd,
+                n,
+                fullPath,
+                last,
+                dir;
+
+            if (dir) {
+               for (var i in dir.contents) {
+                  n = dir.contents[i].name;
+                  if (n.startswith(last) && !n.startswith('.') && n != last) {
+                     if (dir.contents[i].type == 'exec')
+                        matches.push(n + ' ');
+                  }
+               }
+            }
+            for (var c in this.commands) {
+               // Private member.
+               if (c[0] == '_')
+                  continue;
+               if (c.startswith(parts[0]) && c != parts[0])
+                  matches.push(c + ' ');
+            }
+         } else {
+            fullPath = parts[parts.length - 1];
+            pathParts = fullPath.replace(/[\/]+/, '/').split('/');
+            last = pathParts.pop();
+            dir = (pathParts.length > 0) ? this.getEntry(pathParts.join('/')) : this.cwd;
+
+            if (!dir)
+               return [];
+
+            for (var i in dir.contents) {
+               n = dir.contents[i].name;
+               if (n.startswith(last) && !n.startswith('.') && n != last) {
+                  if (dir.contents[i].type == 'dir')
+                     matches.push(n + '/');
+                  else
+                     matches.push(n + ' ');
+               }
+            }
+         }
+         return matches;
+      },
 
       //Pushes the command into the _queue to do it initially when begin method is called
       enqueue: function(command) {
@@ -566,10 +623,49 @@ COMMANDS.help = function(argv, cb) {
 
          if (!stdout)
             return;
-         //Enter key
-         if (key == 13)
+         // Backspace/delete.
+         if (key == 8 || key == 46)
+            stdout.innerHTML = stdout.innerHTML.replace(/.$/, '');
+         // Enter.
+         else if (key == 13)
             this.returnHandler(stdout.innerHTML);
-         
+         // Up arrow.
+         else if (key == 38) {
+            if (this._historyIndex < this._history.length - 1)
+               stdout.innerHTML = this._history[++this._historyIndex];
+         // Down arrow.
+         } else if (key == 40) {
+            if (this._historyIndex <= 0) {
+               if (this._historyIndex == 0)
+                  this._historyIndex--;
+               stdout.innerHTML = '';
+            }
+            else if (this._history.length)
+               stdout.innerHTML = this._history[--this._historyIndex];
+         // Tab.
+         } else if (key == 9) {
+            matches = this.tabComplete(stdout.innerHTML);
+            if (matches.length) {
+               parts = stdout.innerHTML.split(' ');
+               pathParts = parts[parts.length - 1].split('/');
+               pathParts[pathParts.length - 1] = matches[0];
+               parts[parts.length - 1] = pathParts.join('/');
+               stdout.innerHTML = parts.join(' ');
+            }
+         // Ctrl+C, Ctrl+D.
+         } else if ((key == 67 || key == 68) && e.ctrlKey) {
+            if (key == 67)
+               this.write('^C');
+            this.defaultReturnHandler();
+            this._prompt();
+         // Ctrl+L
+         } else if (key == 76 && e.ctrlKey) {
+            var buffer = stdout.innerHTML;
+            this.commands.clear([], function () {
+                this._prompt();
+                stdout.innerHTML = buffer;
+            }.bind(this));
+         }
       },
 
       //Makes the initial call of commands by checking if they exist and calls the prompt and calls default return handler
@@ -621,8 +717,8 @@ COMMANDS.help = function(argv, cb) {
           .enqueue('ls -l')
           .enqueue('cd ..')
           .enqueue('tree')
-          .enqueue('ls')
-          .begin();
+          .enqueue('ls');
+      setTimeout(function(){ Terminal.begin(); }, 600);
    });
 
    //Since on click methods are getting called in global scope we are exposing this method globally
