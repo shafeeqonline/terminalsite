@@ -1,74 +1,35 @@
 body {
-   background: #232323;
+  background: #000;
 }
-
 @font-face {
-    font-family: ubuntu;
-     src: url(/fonts/UbuntuMono.ttf) format("truetype");
+  font-family: ubuntu;
+  src: url(/fonts/UbuntuMono.ttf) format("truetype");
 }
-
-.jsterm a {
-   color: #E0E0E0;
-   text-decoration: none;
+.terminalholder a {
+  color: #E0E0E0;
+  text-decoration: none;
+  font-weight: 700;
 }
-
-.jsterm a:hover {
-   text-decoration: underline;
+.terminalholder a:hover {
+  text-decoration: underline;
 }
-
-div.jsterm {
-   background: #232323;
-   font-family: monospace;
-   font-size: 16px;
-   color: #E0E0E0;
-   width: 900px;
-   margin-bottom: 20px;
-   white-space: pre-wrap;
+div.terminalholder {
+  font-family: monospace;
+  font-size: 16px;
+  color: #E0E0E0;
+  width: 900px;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
 }
-
-div.jsterm .host, div.jsterm .host a {
-   color: #5555ff;
-   font-weight: bold;
-}
-
-div.jsterm .user, div.jsterm .user a {
-   color: #ff5555;
-   font-weight: bold;
-}
-
-div.jsterm .cwd, div.jsterm .cwd a {
-   color: #ffff55;
-   font-weight: bold;
-}
-
-div.jsterm .dir, div.jsterm .dir a {
-   color: #5555ff;
-   font-weight: bold;
-}
-
-div.jsterm .link, div.jsterm .link a {
-   color: #5555ff;
-   font-weight: bold;
-}
-
-div.jsterm .exec, div.jsterm .exec a {
-   color: #55ff55;
-   font-weight: bold;
-}
-
-div.jsterm .img, div.jsterm .img a {
-   color: #ff55ff;
-   font-weight: bold;
-}
-
 #blinker {
     line-height: .9em;
 }
 div, span{
-   font-family: ubuntu !important;
-   font-size: 18px;
-   line-height: 20px;
+  font-family: ubuntu !important;
+  font-size: 18px;
+  line-height: 20px;
+  color: #0C0;
 }
 img{
-   height: 320px;
+  height: 320px;
 }
