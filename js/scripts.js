@@ -284,7 +284,7 @@ COMMANDS.help = function(argv, cb) {
          
          var parentElement = element || document.body;
          this.div = document.createElement('div');
-         this.div.classList.add('jsterm');
+         this.div.classList.add('terminalholder');
          parentElement.appendChild(this.div);
 
          window.onkeydown = function(e) {
@@ -303,7 +303,7 @@ COMMANDS.help = function(argv, cb) {
          this.returnHandler = this._execute;
          this.cwd = this.fs;
          this._prompt();
-         this._toggleBlinker(600);
+         this._toggleBlinker(400);
          this._dequeue();
       },
 
@@ -590,13 +590,11 @@ COMMANDS.help = function(argv, cb) {
          this._resetID('#currentPrompt');
          this.div.appendChild(div);
 
-         prompt.classList.add('prompt');
          prompt.id = 'currentPrompt';
          prompt.innerHTML = this.config.prompt(this.getCWD(), this.config.username);
          div.appendChild(prompt);
 
          this._resetID('#stdout');
-         command.classList.add('command');
          command.id = 'stdout';
          div.appendChild(command);
          this._toggleBlinker(0);
@@ -718,7 +716,8 @@ COMMANDS.help = function(argv, cb) {
           .enqueue('cd ..')
           .enqueue('tree')
           .enqueue('ls');
-      setTimeout(function(){ Terminal.begin(); }, 600);
+      setTimeout(function(){ document.body.innerHTML = '';}, 2000);
+      setTimeout(function(){ Terminal.begin(); }, 3000);
    });
 
    //Since on click methods are getting called in global scope we are exposing this method globally
