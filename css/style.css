@@ -5,6 +5,9 @@ body {
   font-family: ubuntu;
   src: url(/fonts/UbuntuMono.ttf) format("truetype");
 }
+::-webkit-scrollbar{
+  display:none;
+}
 .terminalholder a {
   color: #E0E0E0;
   text-decoration: none;
